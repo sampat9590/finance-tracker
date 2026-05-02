@@ -220,6 +220,35 @@
             font-size: 12px;
         }
 
+        .edit-btn {
+            background: #dbeafe;
+            color: #1e40af;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-cancel {
+            background: #f3f4f6;
+            color: #666;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -426,6 +455,7 @@
             </div>
 
             <button class="btn btn-primary" onclick="addTransaction()" id="addBtn">Add Expense</button>
+            <button class="btn-cancel" onclick="cancelEdit()" id="cancelBtn" style="display: none;">Cancel</button>
         </div>
 
         <div class="expenses-list">
@@ -450,6 +480,7 @@
         let currentType = 'expense';
         let currentView = 'today';
         let deferredPrompt;
+        let editingId = null;
 
         // Migrate old data
         function migrateData() {
@@ -584,7 +615,7 @@
             }
         }
 
-        // Add transaction
+        // Add or Update transaction
         function addTransaction() {
             const itemName = document.getElementById('itemName').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
@@ -595,26 +626,85 @@
                 return;
             }
 
-            const transaction = {
-                id: Date.now(),
-                name: itemName,
-                amount: amount,
-                category: currentType === 'income' ? 'Income' : category,
-                type: currentType,
-                date: getTodayString(),
-                timestamp: new Date().toISOString()
-            };
+            if (editingId !== null) {
+                // Update existing transaction
+                const index = transactions.findIndex(t => t.id === editingId);
+                if (index !== -1) {
+                    transactions[index].name = itemName;
+                    transactions[index].amount = amount;
+                    transactions[index].category = currentType === 'income' ? 'Income' : category;
+                    transactions[index].type = currentType;
+                }
+                editingId = null;
+                document.getElementById('addBtn').textContent = currentType === 'income' ? 'Add Income' : 'Add Expense';
+            } else {
+                // Add new transaction
+                const transaction = {
+                    id: Date.now(),
+                    name: itemName,
+                    amount: amount,
+                    category: currentType === 'income' ? 'Income' : category,
+                    type: currentType,
+                    date: getTodayString(),
+                    timestamp: new Date().toISOString()
+                };
+                transactions.unshift(transaction);
+            }
 
-            transactions.unshift(transaction);
             localStorage.setItem('transactions', JSON.stringify(transactions));
 
             // Clear inputs
             document.getElementById('itemName').value = '';
             document.getElementById('amount').value = '';
+            document.getElementById('cancelBtn').style.display = 'none';
             
             // Update display
             displayTransactions();
             updateTotals();
+        }
+
+        // Edit transaction
+        function editTransaction(id) {
+            const transaction = transactions.find(t => t.id === id);
+            if (!transaction) return;
+
+            // Fill form with transaction data
+            document.getElementById('itemName').value = transaction.name;
+            document.getElementById('amount').value = transaction.amount;
+            
+            // Set the correct type tab
+            currentType = transaction.type;
+            const tabs = document.querySelectorAll('.type-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            if (transaction.type === 'income') {
+                tabs[1].classList.add('active');
+                setTransactionType('income');
+            } else {
+                tabs[0].classList.add('active');
+                setTransactionType('expense');
+            }
+            
+            // Set category
+            document.getElementById('category').value = transaction.category;
+            
+            // Update button text and store editing ID
+            editingId = id;
+            document.getElementById('addBtn').textContent = 'Update ' + (transaction.type === 'income' ? 'Income' : 'Expense');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Show cancel button
+            document.getElementById('cancelBtn').style.display = 'block';
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            editingId = null;
+            document.getElementById('itemName').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('addBtn').textContent = currentType === 'income' ? 'Add Income' : 'Add Expense';
+            document.getElementById('cancelBtn').style.display = 'none';
         }
 
         // Display transactions
@@ -674,8 +764,9 @@
                                 </div>
                                 <div class="expense-meta">${new Date(transaction.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
                             </div>
-                            <div>
+                            <div class="action-buttons">
                                 <span class="${amountClass}">${prefix}₹${transaction.amount.toFixed(2)}</span>
+                                <button class="edit-btn" onclick="editTransaction(${transaction.id})">✎</button>
                                 <button class="delete-btn" onclick="deleteTransaction(${transaction.id})">✕</button>
                             </div>
                         </div>
