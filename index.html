@@ -8,6 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <title>Meditating Monk Finance</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -665,6 +666,11 @@
             </div>
 
             <div class="input-group">
+                <label class="input-label">Date</label>
+                <input type="date" id="transactionDate" style="cursor: pointer;">
+            </div>
+
+            <div class="input-group">
                 <label class="input-label">Amount (₹)</label>
                 <input type="number" id="amount" placeholder="0" step="0.01">
             </div>
@@ -692,6 +698,8 @@
                 <button class="action-btn btn-export" onclick="exportToExcel()">📊 Excel</button>
                 <button class="action-btn btn-import" onclick="document.getElementById('importFile').click()">📤 Import</button>
                 <button class="action-btn btn-stats" onclick="showStats()">📈 Stats</button>
+                <button class="action-btn btn-stats" onclick="showBudgets()">💰 Budget</button>
+                <button class="action-btn btn-stats" onclick="showComparison()">📊 Compare</button>
                 <button class="action-btn btn-stats" onclick="manageCategories()">🏷️ Categories</button>
                 <input type="file" id="importFile" accept=".csv,.json" onchange="importData(event)">
             </div>
@@ -735,10 +743,29 @@
         </div>
     </div>
 
+    <!-- Budget Modal -->
+    <div class="modal" id="budgetModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('budgetModal')">✕</button>
+            <h2 class="modal-title">💰 Budget Limits</h2>
+            <div id="budgetContent"></div>
+        </div>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div class="modal" id="comparisonModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('comparisonModal')">✕</button>
+            <h2 class="modal-title">📊 Period Comparison</h2>
+            <div id="comparisonContent"></div>
+        </div>
+    </div>
+
     <script>
         // State
         let transactions = [];
         let customCategories = [];
+        let budgets = {};
         let currentType = 'expense';
         let currentView = 'today';
         let editingId = null;
@@ -781,10 +808,19 @@
         function init() {
             loadData();
             updateDate();
+            setDefaultDate();
             updateCategories();
             displayTransactions();
             updateTotals();
             loadTheme();
+        }
+
+        function setDefaultDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('transactionDate').value = `${year}-${month}-${day}`;
         }
 
         function loadData() {
@@ -796,11 +832,16 @@
             if (storedCategories) {
                 customCategories = JSON.parse(storedCategories);
             }
+            const storedBudgets = localStorage.getItem('budgets');
+            if (storedBudgets) {
+                budgets = JSON.parse(storedBudgets);
+            }
         }
 
         function saveData() {
             localStorage.setItem('transactions', JSON.stringify(transactions));
             localStorage.setItem('customCategories', JSON.stringify(customCategories));
+            localStorage.setItem('budgets', JSON.stringify(budgets));
         }
 
         function updateDate() {
@@ -866,11 +907,22 @@
             const name = document.getElementById('itemName').value.trim();
             const amount = parseFloat(document.getElementById('amount').value);
             const categoryId = document.getElementById('category').value;
+            const dateInput = document.getElementById('transactionDate').value;
             
             if (!name || !amount || amount <= 0) {
                 alert('Please enter valid details');
                 return;
             }
+            
+            if (!dateInput) {
+                alert('Please select a date');
+                return;
+            }
+            
+            // Convert date input (YYYY-MM-DD) to Date object and date string
+            const [year, month, day] = dateInput.split('-');
+            const selectedDate = new Date(year, month - 1, day);
+            const dateString = `${day}/${month}/${year}`;
             
             const allCategories = [...defaultExpenseCategories, ...defaultIncomeCategories, ...customCategories];
             const category = allCategories.find(c => c.id === categoryId);
@@ -883,7 +935,9 @@
                     amount,
                     category: category.name,
                     categoryId: category.id,
-                    type: currentType
+                    type: currentType,
+                    date: dateString,
+                    timestamp: selectedDate.toISOString()
                 };
                 editingId = null;
                 document.getElementById('cancelBtn').style.display = 'none';
@@ -895,14 +949,15 @@
                     category: category.name,
                     categoryId: category.id,
                     type: currentType,
-                    date: getTodayString(),
-                    timestamp: new Date().toISOString()
+                    date: dateString,
+                    timestamp: selectedDate.toISOString()
                 });
             }
             
             saveData();
             document.getElementById('itemName').value = '';
             document.getElementById('amount').value = '';
+            setDefaultDate(); // Reset to today
             document.getElementById('addBtn').textContent = currentType === 'income' ? 'Add Income' : 'Add Expense';
             displayTransactions();
             updateTotals();
@@ -1164,7 +1219,7 @@
             reader.readAsText(file);
         }
 
-        // Statistics
+        // Statistics with Charts
         function showStats() {
             if (transactions.length === 0) {
                 alert('No transactions yet');
@@ -1174,7 +1229,9 @@
             const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
             const expense = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
             const savings = income - expense;
+            const avgExpense = expense / transactions.filter(t => t.type === 'expense').length || 0;
             
+            // Category breakdown
             const categoryTotals = {};
             transactions.filter(t => t.type === 'expense').forEach(t => {
                 categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
@@ -1182,7 +1239,17 @@
             
             const topCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]).slice(0, 5);
             
+            // Monthly trend (last 6 months)
+            const monthlyData = getMonthlyTrend();
+            
+            // Daily average
+            const days = new Set(transactions.map(t => t.date)).size;
+            const dailyAvg = expense / days || 0;
+            
+            // Build HTML with charts
             let html = `
+                <h3 style="margin-bottom: 16px; color: var(--text-primary); font-size: 18px;">📊 Overview</h3>
+                
                 <div class="stat-card">
                     <span class="stat-label">Total Transactions</span>
                     <span class="stat-value">${transactions.length}</span>
@@ -1199,7 +1266,22 @@
                     <span class="stat-label">Net Savings</span>
                     <span class="stat-value" style="color: ${savings >= 0 ? 'var(--success)' : 'var(--danger)'}">₹${savings.toFixed(2)}</span>
                 </div>
-                <h3 style="margin: 20px 0 12px; color: var(--text-primary)">Top Categories</h3>
+                <div class="stat-card">
+                    <span class="stat-label">Avg Daily Spending</span>
+                    <span class="stat-value">₹${dailyAvg.toFixed(2)}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Avg Transaction</span>
+                    <span class="stat-value">₹${avgExpense.toFixed(2)}</span>
+                </div>
+                
+                <h3 style="margin: 24px 0 16px; color: var(--text-primary); font-size: 18px;">📈 Spending by Category</h3>
+                <canvas id="categoryChart" style="max-height: 300px; margin-bottom: 24px;"></canvas>
+                
+                <h3 style="margin: 24px 0 16px; color: var(--text-primary); font-size: 18px;">📉 Monthly Trend</h3>
+                <canvas id="trendChart" style="max-height: 250px; margin-bottom: 24px;"></canvas>
+                
+                <h3 style="margin: 24px 0 12px; color: var(--text-primary); font-size: 18px;">🏆 Top Categories</h3>
             `;
             
             topCategories.forEach(([cat, amt], i) => {
@@ -1214,6 +1296,173 @@
             
             document.getElementById('statsContent').innerHTML = html;
             document.getElementById('statsModal').style.display = 'flex';
+            
+            // Render charts after modal is visible
+            setTimeout(() => {
+                renderCategoryChart(categoryTotals);
+                renderTrendChart(monthlyData);
+            }, 100);
+        }
+        
+        function getMonthlyTrend() {
+            const months = {};
+            transactions.forEach(t => {
+                const date = new Date(t.timestamp);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                if (!months[monthKey]) {
+                    months[monthKey] = { income: 0, expense: 0 };
+                }
+                if (t.type === 'income') {
+                    months[monthKey].income += t.amount;
+                } else {
+                    months[monthKey].expense += t.amount;
+                }
+            });
+            
+            // Get last 6 months
+            const sortedMonths = Object.keys(months).sort().slice(-6);
+            return sortedMonths.map(key => ({
+                month: key,
+                income: months[key].income,
+                expense: months[key].expense
+            }));
+        }
+        
+        function renderCategoryChart(categoryTotals) {
+            const ctx = document.getElementById('categoryChart');
+            if (!ctx) return;
+            
+            const data = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const labels = data.map(([cat]) => cat);
+            const values = data.map(([, amt]) => amt);
+            
+            const colors = [
+                '#ef4444', '#f59e0b', '#10b981', '#3b82f6', 
+                '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'
+            ];
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: getComputedStyle(document.body).getPropertyValue('--bg-secondary')
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary'),
+                                font: { size: 11 },
+                                padding: 10
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ₹${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderTrendChart(monthlyData) {
+            const ctx = document.getElementById('trendChart');
+            if (!ctx || monthlyData.length === 0) return;
+            
+            const labels = monthlyData.map(m => {
+                const [year, month] = m.month.split('-');
+                const date = new Date(year, month - 1);
+                return date.toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
+            });
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: monthlyData.map(m => m.income),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Expense',
+                            data: monthlyData.map(m => m.expense),
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary'),
+                                font: { size: 12 },
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ₹${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-secondary'),
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString('en-IN');
+                                }
+                            },
+                            grid: {
+                                color: getComputedStyle(document.body).getPropertyValue('--border-color')
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-secondary')
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // Categories Management
@@ -1289,6 +1538,286 @@
             saveData();
             updateCategories();
             displayCustomCategories();
+        }
+
+        // Budget Management
+        function showBudgets() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const monthTransactions = transactions.filter(t => {
+                const date = new Date(t.timestamp);
+                return date.getMonth() === currentMonth && 
+                       date.getFullYear() === currentYear &&
+                       t.type === 'expense';
+            });
+            
+            // Calculate spending by category
+            const categorySpending = {};
+            monthTransactions.forEach(t => {
+                categorySpending[t.categoryId] = (categorySpending[t.categoryId] || 0) + t.amount;
+            });
+            
+            let html = `
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+                    Set monthly budget limits for each category. Get alerts when you're close to your limit!
+                </p>
+            `;
+            
+            // Show all expense categories
+            const allCategories = [...defaultExpenseCategories, ...customCategories.filter(c => c.type === 'expense')];
+            
+            allCategories.forEach(cat => {
+                const spent = categorySpending[cat.id] || 0;
+                const budget = budgets[cat.id] || 0;
+                const percentage = budget > 0 ? (spent / budget) * 100 : 0;
+                const color = percentage >= 100 ? '#ef4444' : percentage >= 80 ? '#f59e0b' : '#10b981';
+                
+                html += `
+                    <div style="margin-bottom: 20px; padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-weight: 600; color: var(--text-primary);">${cat.icon} ${cat.name}</span>
+                            <input type="number" 
+                                   id="budget_${cat.id}" 
+                                   value="${budget}" 
+                                   placeholder="Set limit"
+                                   style="width: 120px; padding: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); text-align: right;"
+                                   onchange="setBudget('${cat.id}', this.value)">
+                        </div>
+                        ${budget > 0 ? `
+                            <div style="margin-top: 12px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px;">
+                                    <span style="color: var(--text-secondary);">₹${spent.toFixed(2)} of ₹${budget.toFixed(2)}</span>
+                                    <span style="color: ${color}; font-weight: 600;">${percentage.toFixed(1)}%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: ${Math.min(percentage, 100)}%; background: ${color}; transition: width 0.3s;"></div>
+                                </div>
+                                ${percentage >= 100 ? '<div style="color: #ef4444; font-size: 12px; margin-top: 6px; font-weight: 600;">⚠️ Budget exceeded!</div>' : ''}
+                                ${percentage >= 80 && percentage < 100 ? '<div style="color: #f59e0b; font-size: 12px; margin-top: 6px; font-weight: 600;">⚠️ Almost at limit!</div>' : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            document.getElementById('budgetContent').innerHTML = html;
+            document.getElementById('budgetModal').style.display = 'flex';
+        }
+        
+        function setBudget(categoryId, amount) {
+            const budget = parseFloat(amount);
+            if (budget > 0) {
+                budgets[categoryId] = budget;
+            } else {
+                delete budgets[categoryId];
+            }
+            saveData();
+            showBudgets(); // Refresh the display
+        }
+        
+        // Period Comparison
+        function showComparison() {
+            if (transactions.length === 0) {
+                alert('No transactions yet');
+                return;
+            }
+            
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            const currentYear = today.getFullYear();
+            const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+            const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+            
+            // Current month data
+            const currentMonthData = getMonthData(currentMonth, currentYear);
+            
+            // Last month data
+            const lastMonthData = getMonthData(lastMonth, lastMonthYear);
+            
+            // Calculate changes
+            const incomeChange = currentMonthData.income - lastMonthData.income;
+            const expenseChange = currentMonthData.expense - lastMonthData.expense;
+            const savingsChange = (currentMonthData.income - currentMonthData.expense) - (lastMonthData.income - lastMonthData.expense);
+            
+            const incomeChangePercent = lastMonthData.income > 0 ? ((incomeChange / lastMonthData.income) * 100) : 0;
+            const expenseChangePercent = lastMonthData.expense > 0 ? ((expenseChange / lastMonthData.expense) * 100) : 0;
+            
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            let html = `
+                <div style="margin-bottom: 24px;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 16px;">📅 Month over Month</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                        <div style="text-align: center; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">LAST MONTH</div>
+                            <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">${monthNames[lastMonth]} ${lastMonthYear}</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">THIS MONTH</div>
+                            <div style="font-size: 16px; font-weight: 700; color: var(--text-primary);">${monthNames[currentMonth]} ${currentYear}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Income</div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <span style="font-size: 16px; font-weight: 600;">₹${lastMonthData.income.toFixed(2)}</span>
+                            <span style="font-size: 20px;">→</span>
+                            <span style="font-size: 16px; font-weight: 600;">₹${currentMonthData.income.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 18px; font-weight: 700; color: ${incomeChange >= 0 ? '#10b981' : '#ef4444'}">
+                            ${incomeChange >= 0 ? '+' : ''}₹${Math.abs(incomeChange).toFixed(2)}
+                        </div>
+                        <div style="font-size: 12px; color: ${incomeChange >= 0 ? '#10b981' : '#ef4444'}">
+                            ${incomeChange >= 0 ? '↑' : '↓'} ${Math.abs(incomeChangePercent).toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Expenses</div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <span style="font-size: 16px; font-weight: 600;">₹${lastMonthData.expense.toFixed(2)}</span>
+                            <span style="font-size: 20px;">→</span>
+                            <span style="font-size: 16px; font-weight: 600;">₹${currentMonthData.expense.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 18px; font-weight: 700; color: ${expenseChange <= 0 ? '#10b981' : '#ef4444'}">
+                            ${expenseChange >= 0 ? '+' : ''}₹${Math.abs(expenseChange).toFixed(2)}
+                        </div>
+                        <div style="font-size: 12px; color: ${expenseChange <= 0 ? '#10b981' : '#ef4444'}">
+                            ${expenseChange >= 0 ? '↑' : '↓'} ${Math.abs(expenseChangePercent).toFixed(1)}%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Net Savings</div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <span style="font-size: 16px; font-weight: 600;">₹${(lastMonthData.income - lastMonthData.expense).toFixed(2)}</span>
+                            <span style="font-size: 20px;">→</span>
+                            <span style="font-size: 16px; font-weight: 600;">₹${(currentMonthData.income - currentMonthData.expense).toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 18px; font-weight: 700; color: ${savingsChange >= 0 ? '#10b981' : '#ef4444'}">
+                            ${savingsChange >= 0 ? '+' : ''}₹${Math.abs(savingsChange).toFixed(2)}
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 24px 0 12px; color: var(--text-primary);">📊 Category Comparison</h3>
+                <canvas id="comparisonChart" style="max-height: 300px;"></canvas>
+            `;
+            
+            document.getElementById('comparisonContent').innerHTML = html;
+            document.getElementById('comparisonModal').style.display = 'flex';
+            
+            setTimeout(() => {
+                renderComparisonChart(lastMonthData.categoryTotals, currentMonthData.categoryTotals);
+            }, 100);
+        }
+        
+        function getMonthData(month, year) {
+            const monthTransactions = transactions.filter(t => {
+                const date = new Date(t.timestamp);
+                return date.getMonth() === month && date.getFullYear() === year;
+            });
+            
+            const income = monthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const expense = monthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            
+            const categoryTotals = {};
+            monthTransactions.filter(t => t.type === 'expense').forEach(t => {
+                categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+            });
+            
+            return { income, expense, categoryTotals, count: monthTransactions.length };
+        }
+        
+        function renderComparisonChart(lastMonth, currentMonth) {
+            const ctx = document.getElementById('comparisonChart');
+            if (!ctx) return;
+            
+            // Get all categories from both months
+            const allCategories = new Set([...Object.keys(lastMonth), ...Object.keys(currentMonth)]);
+            const categories = Array.from(allCategories).slice(0, 6);
+            
+            const lastMonthData = categories.map(cat => lastMonth[cat] || 0);
+            const currentMonthData = categories.map(cat => currentMonth[cat] || 0);
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: [
+                        {
+                            label: 'Last Month',
+                            data: lastMonthData,
+                            backgroundColor: 'rgba(148, 163, 184, 0.7)',
+                            borderColor: '#94a3b8',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'This Month',
+                            data: currentMonthData,
+                            backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                            borderColor: '#667eea',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-primary'),
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ₹${context.parsed.y.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-secondary'),
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString('en-IN');
+                                }
+                            },
+                            grid: {
+                                color: getComputedStyle(document.body).getPropertyValue('--border-color')
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: getComputedStyle(document.body).getPropertyValue('--text-secondary')
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function closeModal(id) {
