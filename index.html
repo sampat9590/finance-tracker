@@ -922,7 +922,8 @@
             // Convert date input (YYYY-MM-DD) to Date object and date string
             const [year, month, day] = dateInput.split('-');
             const selectedDate = new Date(year, month - 1, day);
-            const dateString = `${day}/${month}/${year}`;
+            // Format date string without leading zeros to match getTodayString format
+            const dateString = `${parseInt(day)}/${parseInt(month)}/${year}`;
             
             const allCategories = [...defaultExpenseCategories, ...defaultIncomeCategories, ...customCategories];
             const category = allCategories.find(c => c.id === categoryId);
@@ -972,6 +973,12 @@
             document.getElementById('itemName').value = transaction.name;
             document.getElementById('amount').value = transaction.amount;
             document.getElementById('category').value = transaction.categoryId;
+            
+            // Set the date field from transaction date
+            const [day, month, year] = transaction.date.split('/');
+            const dateForInput = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            document.getElementById('transactionDate').value = dateForInput;
+            
             editingId = id;
             document.getElementById('addBtn').textContent = `Update ${transaction.type === 'income' ? 'Income' : 'Expense'}`;
             document.getElementById('cancelBtn').style.display = 'block';
@@ -990,6 +997,7 @@
             editingId = null;
             document.getElementById('itemName').value = '';
             document.getElementById('amount').value = '';
+            setDefaultDate(); // Reset date to today
             document.getElementById('addBtn').textContent = currentType === 'income' ? 'Add Income' : 'Add Expense';
             document.getElementById('cancelBtn').style.display = 'none';
         }
