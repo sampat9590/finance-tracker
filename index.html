@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker by Tracking Monk</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0C2340">
     <link rel="apple-touch-icon" href="/icon-192.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finance Tracker by Tracking Monk</title>
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -938,6 +938,104 @@
             from { opacity: 0; transform: translateY(16px); }
             to   { opacity: 1; transform: translateY(0); }
         }
+
+        /* ══ TIER BADGES ══ */
+        .badge-free  { background: linear-gradient(135deg,#2e7d32,#43a047); color:white; }
+        .badge-pro   { background: linear-gradient(135deg,#6a1b9a,#9c27b0); color:white; }
+        .badge-proplus { background: linear-gradient(135deg,#D4AF37,#F4D03F); color:#0C2340; }
+        .tier-badge {
+            position:absolute; top:6px; right:6px;
+            font-size:7px; font-weight:800; padding:2px 6px;
+            border-radius:6px; letter-spacing:0.3px;
+        }
+
+        /* ══ TRIAL SYSTEM ══ */
+        .trial-banner {
+            background: linear-gradient(135deg, #7c4dff, #9c27b0);
+            padding: 10px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 10px;
+        }
+        .trial-banner-text { font-size: 12px; font-weight: 700; color: white; }
+        .trial-banner-days { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 1px; }
+        .trial-upgrade-btn {
+            background: linear-gradient(135deg, #D4AF37, #F4D03F);
+            color: #0C2340; border: none; padding: 7px 14px;
+            border-radius: 20px; font-size: 11px; font-weight: 800;
+            cursor: pointer; white-space: nowrap; flex-shrink: 0;
+        }
+
+        /* Locked feature overlay */
+        .feature-locked {
+            position: relative;
+        }
+        .feature-locked::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(255,255,255,0.65);
+            border-radius: 14px;
+            pointer-events: none;
+        }
+        .lock-overlay {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 2; border-radius: 14px;
+        }
+        .lock-overlay .lock-icon { font-size: 18px; }
+
+        /* Trial expired fullscreen */
+        #trialExpiredScreen {
+            position: fixed; inset: 0; z-index: 999998;
+            background: linear-gradient(160deg, #0C2340 0%, #1a3a5c 100%);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 30px 24px; text-align: center;
+        }
+        .trial-exp-icon { font-size: 64px; margin-bottom: 16px; }
+        .trial-exp-title { font-size: 26px; font-weight: 800; color: white; margin-bottom: 8px; }
+        .trial-exp-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 32px; line-height: 1.6; }
+        .trial-plan-cards { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 340px; margin-bottom: 24px; }
+        .trial-plan {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px; padding: 18px 20px;
+            text-align: left; cursor: pointer; transition: all 0.2s;
+            position: relative;
+        }
+        .trial-plan:active { transform: scale(0.98); }
+        .trial-plan.highlight {
+            background: rgba(212,175,55,0.15);
+            border-color: rgba(212,175,55,0.5);
+        }
+        .trial-plan .popular-tag {
+            position: absolute; top: -10px; right: 16px;
+            background: linear-gradient(135deg,#D4AF37,#F4D03F);
+            color: #0C2340; font-size: 9px; font-weight: 800;
+            padding: 3px 10px; border-radius: 10px; letter-spacing: 0.5px;
+        }
+        .trial-plan-name { font-size: 16px; font-weight: 800; color: white; margin-bottom: 4px; }
+        .trial-plan-price { font-size: 22px; font-weight: 800; color: #D4AF37; margin-bottom: 6px; }
+        .trial-plan-price span { font-size: 13px; color: rgba(255,255,255,0.5); font-weight: 400; }
+        .trial-plan-features { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.7; }
+        .trial-continue-free {
+            font-size: 13px; color: rgba(255,255,255,0.45);
+            cursor: pointer; text-decoration: underline; margin-top: 4px;
+        }
+        .trial-continue-free:active { color: rgba(255,255,255,0.7); }
+
+        /* ══ TAP HIGHLIGHTS ══ */
+        .view-tab { transition: all 0.2s; }
+        .view-tab:active { transform: scale(0.96); }
+        .view-tab.active { background: var(--gold-rich); color: white; box-shadow: 0 4px 12px rgba(212,175,55,0.35); }
+        .nav-item { transition: all 0.15s; }
+        .nav-item:active { transform: scale(0.92); }
+        .nav-item.active .nav-icon { background: linear-gradient(135deg, var(--gold-rich), #E6BE5F); box-shadow: 0 4px 12px rgba(212,175,55,0.4); transform: translateY(-2px); transition: all 0.2s; }
+        .nav-item.active .nav-label { color: var(--gold-rich); font-weight: 800; }
+        .profile-row { transition: all 0.15s; }
+        .profile-row:active { background: rgba(212,175,55,0.08) !important; transform: scale(0.98); }
+        [onclick]:not(.nav-item):not(.view-tab):not(.pin-btn):not(.btn):not(button):not(select):not(input) { transition: all 0.15s; }
+        [onclick]:not(.nav-item):not(.view-tab):not(.pin-btn):not(.btn):not(button):not(select):not(input):active { transform: scale(0.97); filter: brightness(0.95); }
     </style>
 </head>
 <body>
@@ -980,34 +1078,33 @@
             <span>📶 5G 🔋</span>
         </div>
         
+        <!-- TRIAL BANNER (shown during trial) -->
+        <div class="trial-banner" id="trialBanner" style="display:none;">
+            <div>
+                <div class="trial-banner-text">⭐ Pro+ Trial Active</div>
+                <div class="trial-banner-days" id="trialDaysLeft">14 days remaining</div>
+            </div>
+            <button class="trial-upgrade-btn" onclick="showUpgradeScreen()">Upgrade Now</button>
+        </div>
+
         <!-- Premium Header -->
         <div class="premium-header">
             <div class="header-top">
-                <!-- Brand -->
                 <div class="brand-section">
                     <div class="app-name">💰 Finance Tracker</div>
                     <div class="app-tagline">by Tracking Monk</div>
                 </div>
                 <!-- Dark mode toggle pill -->
-                <div id="themeToggle" onclick="toggleTheme()" style="
-                    display:flex;align-items:center;gap:6px;
-                    background:rgba(255,255,255,0.12);
-                    border:1px solid rgba(255,255,255,0.2);
-                    border-radius:20px;padding:7px 14px;
-                    cursor:pointer;transition:all 0.25s;
-                    backdrop-filter:blur(10px);">
+                <div id="themeToggle" onclick="toggleTheme()" style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:7px 14px;cursor:pointer;transition:all 0.25s;backdrop-filter:blur(10px);">
                     <span id="themeIcon" style="font-size:15px;">🌙</span>
                     <span id="themeLabel" style="font-size:11px;font-weight:700;color:white;letter-spacing:0.3px;">Dark</span>
                 </div>
             </div>
 
-            <!-- Member selector row -->
+            <!-- Member selector pills -->
             <div style="margin-top:12px;margin-bottom:20px;">
                 <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Viewing as</div>
-                <div id="memberSelectorRow" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;">
-                    <!-- Populated by updateWalletHeader() -->
-                </div>
-                <!-- Hidden native select for JS compat -->
+                <div id="memberSelectorRow" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;"></div>
                 <select id="walletSelector" onchange="switchWalletFromDropdown()" style="display:none;"></select>
             </div>
             
@@ -1041,81 +1138,81 @@
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
                 <!-- Row 1 -->
                 <div onclick="showAnalytics()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">PRO+</div>
+                    <div class="tier-badge badge-free">FREE</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">📊</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Analytics</div>
                 </div>
                 
                 <!-- FEATURE 15: WALLETS - NOW ACTIVE -->
-                <div onclick="showWallets()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">PRO+</div>
+                <div onclick="requirePlan('members', function(){ showWallets(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-proplus">PRO+</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">💼</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Members</div>
                 </div>
                 
-                <div onclick="showBudgets()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: #9E9E9E; color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">UPCOMING</div>
+                <div onclick="requirePlan('budgets', function(){ showBudgets(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-pro">PRO</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">💰</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Budgets</div>
                 </div>
                 
-                <div onclick="showGoals()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: #9E9E9E; color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">UPCOMING</div>
+                <div onclick="requirePlan('goals', function(){ showGoals(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-pro">PRO</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">🎯</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Goals</div>
                 </div>
                 
                 <!-- Row 2 -->
-                <div onclick="showInsights()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">PRO+</div>
+                <div onclick="requirePlan('insights', function(){ showInsights(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-proplus">PRO+</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #f953c6 0%, #b91d73 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">💎</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Insights</div>
                 </div>
                 
-                <div onclick="showRecurring()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">NEW</div>
+                <div onclick="requirePlan('recurring', function(){ showRecurring(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-pro">PRO</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">🔄</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Recurring</div>
                 </div>
                 
-                <div style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: #9E9E9E; color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">UPCOMING</div>
+                <div onclick="requirePlan('reports', function(){ showToast('📄 Monthly Reports coming in v1.1!', 'info', 3000); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor:pointer; position: relative;">
+                    <div class="tier-badge badge-proplus">PRO+</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">📄</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Reports</div>
                 </div>
                 
                 <!-- FEATURE 11: Categories - FUNCTIONAL -->
-                <div onclick="openCategoryManager()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s;">
+                <div onclick="openCategoryManager()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position:relative;"><div class="tier-badge badge-free">FREE</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">🏷️</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Categories</div>
                 </div>
                 
-                <div onclick="try{showExport();}catch(e){alert('Export error: '+e.message);}" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">NEW</div>
+                <div onclick="requirePlan('export_all', function(){ showExport(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-proplus">PRO+</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); display: flex; align-items: center; justify-content: center; font-size: 16px;">📤📥</div>
                     <div style="font-size: 10px; font-weight: 700; color: #1a1a1a; line-height: 1.3;">Export /<br>Import</div>
                 </div>
                 
                 <!-- Row 3 -->
-                <div onclick="showInvestments()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s;">
+                <div onclick="requirePlan('investment', function(){ showInvestments(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position:relative;"><div class="tier-badge badge-pro">PRO</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">💎</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Investment</div>
                 </div>
                 
                 <div onclick="showSecurity()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">NEW</div>
+                    <div class="tier-badge badge-free">FREE</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">🔒</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Security</div>
                 </div>
                 
-                <div onclick="showBackup()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
-                    <div style="position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, #D4AF37, #E6BE5F); color: white; font-size: 7px; font-weight: 700; padding: 2px 5px; border-radius: 6px;">NEW</div>
+                <div onclick="requirePlan('backup', function(){ showBackup(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position: relative;">
+                    <div class="tier-badge badge-pro">PRO</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">☁️</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Backup</div>
                 </div>
                 
-                <div onclick="showThemes()" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position:relative;">
-                    <div style="position:absolute;top:6px;right:6px;background:linear-gradient(135deg,#D4AF37,#E6BE5F);color:white;font-size:7px;font-weight:700;padding:2px 5px;border-radius:6px;">NEW</div>
+                <div onclick="requirePlan('themes', function(){ showThemes(); })" style="background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.3s; position:relative;">
+                    <div class="tier-badge badge-pro">PRO</div>
                     <div style="width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 12px; background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); display: flex; align-items: center; justify-content: center; font-size: 20px;">🎨</div>
                     <div style="font-size: 12px; font-weight: 700; color: #1a1a1a;">Themes</div>
                 </div>
@@ -1148,6 +1245,12 @@
 
             <!-- FOOTER -->
             <div style="margin-top:28px;padding:20px 16px 12px;text-align:center;">
+                <!-- Privacy Badge -->
+                <div style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(80,200,120,0.12),rgba(80,200,120,0.06));border:1px solid rgba(80,200,120,0.25);padding:10px 18px;border-radius:30px;margin-bottom:12px;">
+                    <span style="font-size:16px;">🔐</span>
+                    <span style="font-size:12px;font-weight:700;color:#2e7d32;">Your data never leaves your device</span>
+                </div>
+
                 <!-- Divider -->
                 <div style="height:1px;background:rgba(0,0,0,0.07);margin-bottom:14px;"></div>
                 <!-- Brand -->
@@ -1181,11 +1284,11 @@
                  <div class="nav-icon">📊</div>
                  <div class="nav-label">Analytics</div>
              </div>
-             <div class="nav-item" onclick="setActiveNav(this);showWallets()">
+             <div class="nav-item" onclick="setActiveNav(this);requirePlan('members', function(){ showWallets(); })">
                  <div class="nav-icon">👥</div>
                  <div class="nav-label">Members</div>
              </div>
-             <div class="nav-item" onclick="setActiveNav(this);showGoals()">
+             <div class="nav-item" onclick="setActiveNav(this);requirePlan('goals', function(){ showGoals(); })">
                  <div class="nav-icon">🎯</div>
                  <div class="nav-label">Goals</div>
              </div>
@@ -1859,7 +1962,7 @@
             
             // Check wallet limit (max 4 including main wallet)
             if (wallets.length >= 2) {
-                showToast('❌ Max 2 members allowed. Delete one first.', 'error'); return;
+                showToast('❌ Max 2 members allowed.', 'error'); return;
                 return;
             }
             
@@ -1962,17 +2065,18 @@
         }
         
         window.updateWalletHeader = function() {
-            // Update hidden native select (for JS compat)
+            // Update hidden select
             var selector = document.getElementById('walletSelector');
-            selector.innerHTML = '';
-            wallets.forEach(function(wallet) {
-                var option = document.createElement('option');
-                option.value = wallet.id;
-                option.textContent = wallet.icon + ' ' + wallet.name;
-                if (wallet.id === activeWalletId) option.selected = true;
-                selector.appendChild(option);
-            });
-
+            if (selector) {
+                selector.innerHTML = '';
+                wallets.forEach(function(wallet) {
+                    var opt = document.createElement('option');
+                    opt.value = wallet.id;
+                    opt.textContent = wallet.icon + ' ' + wallet.name;
+                    if (wallet.id === activeWalletId) opt.selected = true;
+                    selector.appendChild(opt);
+                });
+            }
             // Render pill-style member selector
             var row = document.getElementById('memberSelectorRow');
             if (!row) return;
@@ -1981,18 +2085,10 @@
                 var isActive = wallet.id === activeWalletId;
                 var pill = document.createElement('div');
                 pill.onclick = function() { window.switchWalletFromDropdown(wallet.id); };
-                pill.style.cssText = [
-                    'display:flex', 'align-items:center', 'gap:6px',
-                    'padding:8px 14px', 'border-radius:20px', 'cursor:pointer',
-                    'transition:all 0.2s', 'white-space:nowrap', 'flex-shrink:0',
-                    isActive
-                        ? 'background:linear-gradient(135deg,var(--gold-rich),#E6BE5F);box-shadow:0 4px 12px rgba(212,175,55,0.4);'
-                        : 'background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);'
-                ].join(';');
-                pill.innerHTML =
-                    '<span style="font-size:18px;">' + wallet.icon + '</span>' +
-                    '<span style="font-size:12px;font-weight:700;color:' + (isActive ? '#0C2340' : 'white') + ';">' +
-                    wallet.name + '</span>' +
+                pill.style.cssText = 'display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;cursor:pointer;transition:all 0.2s;white-space:nowrap;flex-shrink:0;' +
+                    (isActive ? 'background:linear-gradient(135deg,var(--gold-rich),#E6BE5F);box-shadow:0 4px 12px rgba(212,175,55,0.4);' : 'background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);');
+                pill.innerHTML = '<span style="font-size:18px;">' + wallet.icon + '</span>' +
+                    '<span style="font-size:12px;font-weight:700;color:' + (isActive ? '#0C2340' : 'white') + ';">' + wallet.name + '</span>' +
                     (isActive ? '<span style="font-size:10px;color:#0C2340;opacity:0.7;">✓</span>' : '');
                 row.appendChild(pill);
             });
@@ -2000,11 +2096,10 @@
         
         window.switchWalletFromDropdown = function(walletId) {
             if (!walletId) {
-                var selector = document.getElementById('walletSelector');
-                walletId = selector.value;
+                var sel = document.getElementById('walletSelector');
+                walletId = sel ? sel.value : null;
             }
-            if (walletId === activeWalletId) return;
-
+            if (!walletId || walletId === activeWalletId) return;
             activeWalletId = walletId;
             localStorage.setItem('activeWalletId', walletId);
             loadData();
@@ -2013,7 +2108,6 @@
             updateCounter();
             updateCategories();
             updateWalletHeader();
-
             var wallet = wallets.find(function(w){ return w.id === walletId; });
             if (wallet) showToast('✅ Switched to ' + wallet.name, 'info');
         }
@@ -3648,8 +3742,6 @@
                 localStorage.setItem('appTheme', themeId);
                 localStorage.setItem('theme', themeId); // backward compat
             }
-
-            // Update toggle pill label
             updateThemeToggleLabel();
         }
 
@@ -3705,13 +3797,6 @@
             showToast('🎨 Theme applied!', 'success');
         }
 
-        // Update old toggleTheme to use new system
-        window.toggleTheme = function() {
-            var current = getCurrentTheme();
-            var next = (current === 'dark') ? 'default' : 'dark';
-            applyTheme(next, true);
-            updateThemeToggleLabel();
-        }
 
         function updateThemeToggleLabel() {
             var current = getCurrentTheme();
@@ -3720,6 +3805,13 @@
             var labelEl = document.getElementById('themeLabel');
             if (iconEl) iconEl.textContent = isDark ? '☀️' : '🌙';
             if (labelEl) labelEl.textContent = isDark ? 'Light' : 'Dark';
+        }
+        // Update old toggleTheme to use new system
+        window.toggleTheme = function() {
+            var current = getCurrentTheme();
+            var next = (current === 'dark') ? 'default' : 'dark';
+            applyTheme(next, true);
+            updateThemeToggleLabel();
         }
 
 
@@ -3906,9 +3998,8 @@
             document.getElementById('avatarPicker').style.display = 'none';
             var firstUse = localStorage.getItem('firstUseDate');
             if (!firstUse) { firstUse = new Date().toISOString(); localStorage.setItem('firstUseDate', firstUse); }
-            var since = new Date(firstUse);
             document.getElementById('profileMemberSince').textContent =
-                since.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+                new Date(firstUse).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
             document.getElementById('profileModal').style.display = 'flex';
         }
         window.closeProfileModal = function() { document.getElementById('profileModal').style.display = 'none'; }
@@ -3926,20 +4017,473 @@
             document.getElementById('profileAvatar').textContent = emoji;
             document.getElementById('avatarPicker').style.display = 'none';
         }
-        window.rateApp = function() { showToast('⭐ Rating coming soon on Play Store!', 'info', 3500); }
-        window.shareApp = function() {
-            var text = 'I use Finance Tracker by Tracking Monk to manage my money! Simple, private & made in India 🇮🇳';
+        window.rateApp    = function() { showToast('⭐ Rating coming soon on Play Store!', 'info', 3500); }
+        window.shareApp   = function() {
+            var text = 'I use Finance Tracker by Tracking Monk! Simple, private & 🇮🇳 Made in India.';
             if (navigator.share) { navigator.share({title:'Finance Tracker',text:text}).catch(function(){}); }
             else { showToast('📤 Finance Tracker by Tracking Monk 🇮🇳', 'info', 3500); }
         }
         window.showWhatsNew = function() { closeProfileModal(); document.getElementById('whatsNewModal').style.display = 'flex'; }
         window.showPrivacy  = function() { closeProfileModal(); document.getElementById('privacyModal').style.display = 'flex'; }
         window.clearAllData = function() {
-            showConfirm('🗑️','Clear All Data','This will permanently delete ALL your data. Cannot be undone.','Clear Everything',false,function(){
-                localStorage.clear(); showToast('✅ Cleared. Reloading...','info');
-                setTimeout(function(){location.reload();},1500);
+            document.getElementById('profileModal').style.display = 'none';
+            setTimeout(function() {
+                showConfirm('🗑️','Are you sure?',
+                    'This will permanently delete ALL your transactions, budgets, goals and settings. Cannot be undone.',
+                    'Yes, Clear Everything', false, function() {
+                        showConfirm('⚠️','Last Warning',
+                            'Are you absolutely sure? All your data will be gone forever.',
+                            'Yes, I am sure', false, function() {
+                                localStorage.clear();
+                                showToast('✅ All data cleared. Reloading...','info');
+                                setTimeout(function(){location.reload();},1500);
+                            });
+                    });
+            }, 150);
+        }
+
+
+        // ==========================================
+        // TRIAL & SUBSCRIPTION SYSTEM
+        // ==========================================
+        var TRIAL_DAYS = 15;
+        var userPlan = 'free';
+        var yearlyBilling = false;
+
+        // ── Storage keys (obfuscated) ──
+        var _k = {
+            plan:    btoa('userPlan_v1'),
+            install: btoa('installDate_v1'),
+            expiry:  btoa('planExpiry_v1'),
+            token:   btoa('planToken_v1'),
+            checks:  btoa('integrityChecks_v1')
+        };
+
+        // ── Device fingerprint ──
+        function getDeviceFingerprint() {
+            var fp = [navigator.userAgent, navigator.language,
+                screen.width+'x'+screen.height, screen.colorDepth,
+                new Date().getTimezoneOffset(), navigator.hardwareConcurrency||''].join('|');
+            var h = 0;
+            for (var i=0; i<fp.length; i++) { h = ((h<<5)-h)+fp.charCodeAt(i); h|=0; }
+            return Math.abs(h).toString(36);
+        }
+
+        // ── Plan token ──
+        function generatePlanToken(plan, fp) {
+            var raw = plan+'|'+fp+'|'+Date.now()+'|TM_v1_2026';
+            var h = 0;
+            for (var i=0; i<raw.length; i++) { h = ((h<<5)-h)+raw.charCodeAt(i); h|=0; }
+            return btoa(plan+':'+Math.abs(h).toString(36));
+        }
+
+        function verifyPlanToken(token, plan) {
+            try { return atob(token).split(':')[0] === plan; } catch(e) { return false; }
+        }
+
+        // ── Multi-layer storage ──
+        function secureSave(key, value) {
+            try { localStorage.setItem(key, value); } catch(e) {}
+            try { sessionStorage.setItem(key+'_s', value); } catch(e) {}
+            try {
+                var d = new Date(); d.setFullYear(d.getFullYear()+1);
+                document.cookie = key+'_c='+encodeURIComponent(value)+';expires='+d.toUTCString()+';SameSite=Strict';
+            } catch(e) {}
+        }
+
+        function secureRead(key) {
+            var vals = [];
+            try { var v=localStorage.getItem(key); if(v) vals.push(v); } catch(e) {}
+            try { var v=sessionStorage.getItem(key+'_s'); if(v) vals.push(v); } catch(e) {}
+            try {
+                var m=document.cookie.match(new RegExp(key+'_c=([^;]+)'));
+                if(m) vals.push(decodeURIComponent(m[1]));
+            } catch(e) {}
+            if (!vals.length) return null;
+            var counts={};
+            vals.forEach(function(v){ counts[v]=(counts[v]||0)+1; });
+            return Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];})[0];
+        }
+
+        function initTrial() {
+            // Check paid plan first
+            var savedPlan = secureRead(_k.plan);
+            var planToken = secureRead(_k.token);
+            if (savedPlan === 'pro' || savedPlan === 'proplus') {
+                if (planToken && verifyPlanToken(planToken, savedPlan)) {
+                    userPlan = savedPlan;
+                    setTimeout(updateFeatureLocks, 300);
+                    return;
+                }
+            }
+
+            // Check trial
+            var installDate = secureRead(_k.install);
+            if (!installDate) {
+                installDate = new Date().toISOString();
+                secureSave(_k.install, installDate);
+                secureSave(_k.checks, btoa(String(new Date(installDate).getTime())));
+            }
+
+            var daysUsed = Math.floor((Date.now() - new Date(installDate).getTime()) / (1000*60*60*24));
+
+            var daysLeft = Math.max(0, TRIAL_DAYS - daysUsed);
+
+            if (daysLeft > 0) {
+                userPlan = 'trial';
+                showTrialBanner(daysLeft);
+            } else {
+                userPlan = 'free';
+                showTrialExpired();
+            }
+            setTimeout(updateFeatureLocks, 300);
+        }
+
+        function showTrialBanner(daysLeft) {
+            var banner = document.getElementById('trialBanner');
+            if (banner) {
+                banner.style.display = 'flex';
+                document.getElementById('trialDaysLeft').textContent =
+                    daysLeft === 1 ? '1 day remaining' : daysLeft + ' days remaining';
+            }
+        }
+
+        function showTrialExpired() {
+            var screen = document.getElementById('trialExpiredScreen');
+            if (screen) screen.style.display = 'flex';
+        }
+
+        window.showUpgradeScreen = function() {
+            document.getElementById('upgradeModal').style.display = 'flex';
+        }
+
+        window.selectPlan = function(plan) {
+            // Close any open modals first
+            document.getElementById('featureUpgradeModal').style.display = 'none';
+            var u = document.getElementById('upgradeModal');
+            if (u) u.style.display = 'none';
+            document.getElementById('trialExpiredScreen').style.display = 'none';
+            // Show coming soon modal
+            document.getElementById('comingSoonModal').style.display = 'flex';
+        }
+
+        window.activatePlan = function(plan) {
+            var token = generatePlanToken(plan, getDeviceFingerprint());
+            secureSave(_k.plan, plan);
+            secureSave(_k.token, token);
+            var expiry = new Date(); expiry.setMonth(expiry.getMonth()+1);
+            secureSave(_k.expiry, btoa(expiry.toISOString()));
+            userPlan = plan;
+            document.getElementById('trialExpiredScreen').style.display = 'none';
+            document.getElementById('featureUpgradeModal').style.display = 'none';
+            var u = document.getElementById('upgradeModal');
+            if (u) u.style.display = 'none';
+            document.getElementById('trialBanner').style.display = 'none';
+            updateFeatureLocks();
+            showToast('🎉 Welcome to '+(plan==='proplus'?'Pro+':'Pro')+'! All features unlocked.', 'success', 4000);
+        }
+
+        window.continueFree = function() {
+            showConfirm('🆓', 'Continue with Free',
+                'You will lose access to Pro features. You can upgrade anytime from the Profile tab.',
+                'Continue Free', false,
+                function() {
+                    secureSave(_k.plan, 'free');
+                    userPlan = 'free';
+                    document.getElementById('trialExpiredScreen').style.display = 'none';
+                    updateFeatureLocks();
+                    showToast('Using Free plan. Upgrade anytime!', 'info');
+                }
+            );
+        }
+
+        window.toggleBilling = function() {
+            yearlyBilling = !yearlyBilling;
+            var toggle = document.getElementById('billingToggle');
+            var knob   = document.getElementById('billingToggleKnob');
+            if (yearlyBilling) {
+                toggle.style.background = '#D4AF37';
+                knob.style.left = '23px';
+                // Update prices shown
+                document.querySelectorAll('.trial-plan-price').forEach(function(el, i) {
+                    if (i === 0) el.innerHTML = '₹1999 <span>/ year</span>';
+                    if (i === 1) el.innerHTML = '₹1999 <span>/ year</span>';
+                });
+            } else {
+                toggle.style.background = '#ccc';
+                knob.style.left = '3px';
+                document.querySelectorAll('.trial-plan-price').forEach(function(el, i) {
+                    if (i === 0) el.innerHTML = '₹199 <span>/ month</span>';
+                    if (i === 1) el.innerHTML = '₹99 <span>/ month</span>';
+                });
+            }
+        }
+
+        // Force show trial expired for demo (remove in production)
+        window.previewTrialExpired = function() {
+            document.getElementById('trialExpiredScreen').style.display = 'flex';
+        }
+
+
+        // ==========================================
+        // FEATURE GATING
+        // ==========================================
+        var PLAN_FEATURES = {
+            free:    ['analytics_free', 'categories', 'security'],
+            pro:     ['analytics_free', 'categories', 'security',
+                      'budgets', 'goals', 'recurring', 'investment',
+                      'backup', 'themes', 'export_csv'],
+            proplus: ['analytics_free', 'categories', 'security',
+                      'budgets', 'goals', 'recurring', 'investment',
+                      'backup', 'themes', 'export_csv',
+                      'members', 'insights', 'reports',
+                      'export_all', 'import'],
+            trial:   ['analytics_free', 'categories', 'security',
+                      'budgets', 'goals', 'recurring', 'investment',
+                      'backup', 'themes', 'export_csv',
+                      'members', 'insights', 'reports',
+                      'export_all', 'import'] // trial = full proplus access
+        };
+
+        var FEATURE_PLAN = {
+            budgets:    'pro',
+            goals:      'pro',
+            recurring:  'pro',
+            investment: 'pro',
+            backup:     'pro',
+            themes:     'pro',
+            members:    'proplus',
+            insights:   'proplus',
+            reports:    'proplus',
+            export_all: 'proplus',
+            reports:    'proplus',
+            import:     'proplus'
+        };
+
+        function canUse(feature) {
+            var allowed = PLAN_FEATURES[userPlan] || PLAN_FEATURES['free'];
+            return allowed.indexOf(feature) !== -1;
+        }
+
+        var currentUpgradePlan = 'pro';
+
+        var FEATURE_INFO = {
+            budgets: {
+                icon:'💰', title:'Budget Manager', plan:'pro',
+                bg:'linear-gradient(135deg,#4facfe,#00f2fe)',
+                desc:'Take control of your monthly spending',
+                features:[
+                    { icon:'💰', text:'Set monthly budgets for any category' },
+                    { icon:'📊', text:'Visual progress bar — see how much you have spent' },
+                    { icon:'🟢', text:'Green / Orange / Red status as you approach limit' },
+                    { icon:'✏️', text:'Edit or delete budgets anytime' },
+                    { icon:'🔔', text:'Instant alert when you go over budget' },
+                ]
+            },
+            goals: {
+                icon:'🎯', title:'Savings Goals', plan:'pro',
+                bg:'linear-gradient(135deg,#43e97b,#38f9d7)',
+                desc:'Save smarter with target-based goals',
+                features:[
+                    { icon:'🎯', text:'Create goals with a target amount' },
+                    { icon:'🗓️', text:'Set a deadline and track days remaining' },
+                    { icon:'💰', text:'Add money to goals progressively' },
+                    { icon:'📈', text:'Progress bar shows % completed' },
+                    { icon:'🎉', text:'Celebrate when goal is achieved' },
+                ]
+            },
+            recurring: {
+                icon:'🔄', title:'Recurring Transactions', plan:'pro',
+                bg:'linear-gradient(135deg,#fa709a,#fee140)',
+                desc:'Never miss a repeated income or expense',
+                features:[
+                    { icon:'🔄', text:'Set up daily, weekly, monthly or yearly entries' },
+                    { icon:'⚡', text:'Auto-added every time you open the app' },
+                    { icon:'⏸️', text:'Pause or resume any recurring transaction' },
+                    { icon:'📋', text:'Summary popup showing what was auto-added' },
+                    { icon:'✏️', text:'Edit name, amount, category anytime' },
+                ]
+            },
+            investment: {
+                icon:'📈', title:'Investment Tracker', plan:'pro',
+                bg:'linear-gradient(135deg,#667eea,#764ba2)',
+                desc:'Keep a close eye on all your investments',
+                features:[
+                    { icon:'📈', text:'Track all investment transactions in one place' },
+                    { icon:'💎', text:'Separate investment category for clear tracking' },
+                    { icon:'📊', text:'See total invested amount at a glance' },
+                    { icon:'🗂️', text:'Full history of all investment entries' },
+                    { icon:'📤', text:'Export investment data separately' },
+                ]
+            },
+            backup: {
+                icon:'☁️', title:'Backup & Restore', plan:'pro',
+                bg:'linear-gradient(135deg,#a1c4fd,#c2e9fb)',
+                desc:'Keep your data safe, always',
+                features:[
+                    { icon:'💾', text:'One-tap full backup of all your data' },
+                    { icon:'📦', text:'Backs up transactions, budgets, goals & settings' },
+                    { icon:'♻️', text:'Restore from any backup file instantly' },
+                    { icon:'📅', text:'Shows date of last backup' },
+                    { icon:'🔒', text:'Backup file stays on your device — fully private' },
+                ]
+            },
+            themes: {
+                icon:'🎨', title:'Custom Themes', plan:'pro',
+                bg:'linear-gradient(135deg,#ffd89b,#19547b)',
+                desc:'Make the app truly yours',
+                features:[
+                    { icon:'⭐', text:'Gold & Navy — the classic default' },
+                    { icon:'🌙', text:'Dark Mode — easy on the eyes at night' },
+                    { icon:'🌊', text:'Ocean Blue — cool & refreshing' },
+                    { icon:'🌿', text:'Forest Green — calm & natural' },
+                    { icon:'🌸', text:'Rose Pink — soft & elegant' },
+                    { icon:'🖤', text:'Midnight Purple — bold & dramatic' },
+                    { icon:'🌅', text:'Sunset Orange — warm & energetic' },
+                ]
+            },
+            members: {
+                icon:'👥', title:'Family Members', plan:'proplus',
+                bg:'linear-gradient(135deg,#f093fb,#f5576c)',
+                desc:'Manage finances for your whole family',
+                features:[
+                    { icon:'👥', text:'Add 1 family member (main + 1 total)' },
+                    { icon:'🔀', text:'Switch between members instantly from header' },
+                    { icon:'🗂️', text:'Each member has independent transactions' },
+                    { icon:'💰', text:'Separate budgets & goals per member' },
+                    { icon:'🔄', text:'Separate recurring transactions per member' },
+                ]
+            },
+            insights: {
+                icon:'💡', title:'AI Insights', plan:'proplus',
+                bg:'linear-gradient(135deg,#f953c6,#b91d73)',
+                desc:'Let AI analyse your spending for you',
+                features:[
+                    { icon:'🏆', text:'Top spending category with % breakdown' },
+                    { icon:'📊', text:'Average spend per transaction' },
+                    { icon:'📈', text:'Recent trend — spending up or down' },
+                    { icon:'📅', text:'7-day daily spending trend chart' },
+                    { icon:'📉', text:'Month vs last month comparison chart' },
+                ]
+            },
+            reports: {
+                icon:'📄', title:'Monthly Reports', plan:'proplus',
+                bg:'linear-gradient(135deg,#30cfd0,#330867)',
+                desc:'Your finances summarised every month',
+                features:[
+                    { icon:'📄', text:'Full monthly income & expense summary' },
+                    { icon:'📊', text:'Category-wise spending breakdown' },
+                    { icon:'📅', text:'Compare current month vs previous month' },
+                    { icon:'📤', text:'Export report as PDF or Excel' },
+                    { icon:'🗂️', text:'Access reports for any past month' },
+                ]
+            },
+            export_all: {
+                icon:'📤', title:'Export & Import', plan:'proplus',
+                bg:'linear-gradient(135deg,#fbc2eb,#a6c1ee)',
+                desc:'Your data, your way, any format',
+                features:[
+                    { icon:'📗', text:'Export as Excel (.xlsx) with summary sheet' },
+                    { icon:'📕', text:'Export as PDF — professional formatted report' },
+                    { icon:'📊', text:'Export as CSV — opens in any spreadsheet app' },
+                    { icon:'📋', text:'Export as JSON — full raw data backup' },
+                    { icon:'📥', text:'Import from CSV, Excel or JSON files' },
+                ]
+            },
+        };
+
+        function requirePlan(feature, callback) {
+            if (canUse(feature)) {
+                callback();
+                return;
+            }
+            var needed = FEATURE_PLAN[feature] || 'pro';
+            var isProPlus = needed === 'proplus';
+            var info = FEATURE_INFO[feature] || { icon:'⭐', title:feature, desc:'Premium feature', bg:'linear-gradient(135deg,#667eea,#764ba2)' };
+
+            currentUpgradePlan = needed;
+
+            // Set header
+            document.getElementById('upgradeModalIcon').textContent = isProPlus ? '💎' : '⭐';
+            document.getElementById('upgradeModalTitle').textContent = 'Upgrade to ' + (isProPlus ? 'Pro+' : 'Pro');
+            document.getElementById('upgradeModalSub').textContent = isProPlus
+                ? 'Get the ultimate Finance Tracker experience'
+                : 'Unlock powerful finance management tools';
+
+            // Set feature highlight
+            document.getElementById('upgradeFeatureIcon').style.background = info.bg;
+            document.getElementById('upgradeFeatureIcon').textContent = info.icon;
+            document.getElementById('upgradeFeatureTitle').textContent = info.title;
+            document.getElementById('upgradeFeatureDesc').textContent = info.desc + ' — available on ' + (isProPlus ? 'Pro+' : 'Pro');
+
+            // Set plan badge
+            var badge = document.getElementById('upgradePlanBadge');
+            badge.style.background = isProPlus
+                ? 'linear-gradient(135deg,#D4AF37,#F4D03F)'
+                : 'linear-gradient(135deg,#6a1b9a,#9c27b0)';
+            badge.querySelector('span').style.color = isProPlus ? '#0C2340' : 'white';
+            badge.querySelector('span').textContent = (isProPlus ? '💎 WHAT YOU GET WITH PRO+' : '⭐ WHAT YOU GET WITH PRO');
+
+            // Render feature-specific list
+            var listEl = document.getElementById('upgradePlanFeatures');
+            listEl.innerHTML = info.features.map(function(f) {
+                return '<div style="display:flex;align-items:center;gap:10px;background:var(--ivory);padding:10px 12px;border-radius:10px;">' +
+                    '<span style="font-size:18px;flex-shrink:0;">' + f.icon + '</span>' +
+                    '<span style="font-size:13px;color:var(--text-dark);font-weight:500;">' + f.text + '</span>' +
+                    '</div>';
+            }).join('');
+
+            // Set pricing
+            var pricingEl = document.getElementById('upgradePricing');
+            pricingEl.style.background = isProPlus
+                ? 'linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.05))'
+                : 'linear-gradient(135deg,rgba(106,27,154,0.08),rgba(106,27,154,0.04))';
+            pricingEl.style.borderColor = isProPlus ? 'rgba(212,175,55,0.3)' : 'rgba(106,27,154,0.2)';
+            document.getElementById('upgradePlanName').textContent = isProPlus ? '💎 Pro+' : '⭐ Pro';
+            document.getElementById('upgradePrice').style.color = isProPlus ? '#D4AF37' : '#9c27b0';
+            document.getElementById('upgradePrice').innerHTML = (isProPlus ? '₹199' : '₹99') + '<span style="font-size:13px;font-weight:400;color:var(--text-light);">/mo</span>';
+            document.getElementById('upgradeYearlyPrice').textContent = isProPlus ? '₹1999/year' : '₹999/year';
+
+            // CTA button
+            var ctaBtn = document.getElementById('upgradeCtaBtn');
+            ctaBtn.style.background = isProPlus
+                ? 'linear-gradient(135deg,#D4AF37,#F4D03F)'
+                : 'linear-gradient(135deg,#6a1b9a,#9c27b0)';
+            ctaBtn.style.color = isProPlus ? '#0C2340' : 'white';
+            ctaBtn.textContent = isProPlus ? 'Get Pro+ — Coming Soon 💎' : 'Get Pro — Coming Soon ⭐';
+
+            // Show modal
+            document.getElementById('featureUpgradeModal').style.display = 'flex';
+        }
+
+        // Lock the feature grid visually for free users
+        function updateFeatureLocks() {
+            if (userPlan === 'trial' || userPlan === 'proplus') return; // all unlocked
+
+            var locks = {
+                budgets:    document.querySelector('[onclick*="showBudgets"]'),
+                goals:      document.querySelector('[onclick*="showGoals"]'),
+                recurring:  document.querySelector('[onclick*="showRecurring"]'),
+                investment: document.querySelector('[onclick*="showInvestments"]'),
+                backup:     document.querySelector('[onclick*="showBackup"]'),
+                themes:     document.querySelector('[onclick*="showThemes"]'),
+                members:    document.querySelector('[onclick*="showWallets"]'),
+                insights:   document.querySelector('[onclick*="showInsights"]'),
+                export_all: document.querySelector('[onclick*="showExport"]'),
+            };
+
+            Object.entries(locks).forEach(function(entry) {
+                var feature = entry[0];
+                var el = entry[1];
+                if (!el) return;
+                if (!canUse(feature)) {
+                    el.style.opacity = '0.5';
+                    el.style.filter = 'grayscale(0.5)';
+                }
             });
         }
+
+
 
         // Initialize App
         window.init = function() {
@@ -4775,45 +5319,33 @@
             </div>
             <div style="background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.04));border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:14px;margin-bottom:16px;display:flex;align-items:center;gap:12px;">
                 <div style="font-size:26px;">🗓️</div>
-                <div>
-                    <div style="font-size:11px;color:var(--text-medium);font-weight:600;">Member Since</div>
-                    <div id="profileMemberSince" style="font-size:15px;font-weight:700;color:var(--text-dark);margin-top:2px;">Today</div>
-                </div>
+                <div><div style="font-size:11px;color:var(--text-medium);font-weight:600;">Member Since</div>
+                <div id="profileMemberSince" style="font-size:15px;font-weight:700;color:var(--text-dark);margin-top:2px;">Today</div></div>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-                <div onclick="rateApp()" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#f093fb,#f5576c);display:flex;align-items:center;justify-content:center;font-size:18px;">⭐</div>
-                        <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">Rate Finance Tracker</div><div style="font-size:11px;color:var(--text-light);margin-top:1px;">Love the app? Leave a review!</div></div>
-                    </div>
+                <div onclick="rateApp()" class="profile-row" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#f093fb,#f5576c);display:flex;align-items:center;justify-content:center;font-size:18px;">⭐</div>
+                    <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">Rate Finance Tracker</div><div style="font-size:11px;color:var(--text-light);">Love the app? Leave a review!</div></div></div>
                     <div style="font-size:18px;color:var(--text-light);">›</div>
                 </div>
-                <div onclick="shareApp()" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#43e97b,#38f9d7);display:flex;align-items:center;justify-content:center;font-size:18px;">📤</div>
-                        <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">Share App</div><div style="font-size:11px;color:var(--text-light);margin-top:1px;">Tell your friends about Finance Tracker</div></div>
-                    </div>
+                <div onclick="shareApp()" class="profile-row" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#43e97b,#38f9d7);display:flex;align-items:center;justify-content:center;font-size:18px;">📤</div>
+                    <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">Share App</div><div style="font-size:11px;color:var(--text-light);">Tell your friends about Finance Tracker</div></div></div>
                     <div style="font-size:18px;color:var(--text-light);">›</div>
                 </div>
-                <div onclick="showWhatsNew()" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:18px;">🆕</div>
-                        <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">What's New</div><div style="font-size:11px;color:var(--text-light);margin-top:1px;">v1.0 — See latest features</div></div>
-                    </div>
+                <div onclick="showWhatsNew()" class="profile-row" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:18px;">🆕</div>
+                    <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">What's New</div><div style="font-size:11px;color:var(--text-light);">v1.0 — See latest features</div></div></div>
                     <div style="font-size:18px;color:var(--text-light);">›</div>
                 </div>
-                <div onclick="showPrivacy()" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4facfe,#00f2fe);display:flex;align-items:center;justify-content:center;font-size:18px;">🛡️</div>
-                        <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">Privacy Policy</div><div style="font-size:11px;color:var(--text-light);margin-top:1px;">Your data stays on your device</div></div>
-                    </div>
+                <div onclick="showPrivacy()" class="profile-row" style="background:white;border:1px solid rgba(0,0,0,0.07);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#4facfe,#00f2fe);display:flex;align-items:center;justify-content:center;font-size:18px;">🛡️</div>
+                    <div><div style="font-weight:700;font-size:14px;color:var(--text-dark);">Privacy Policy</div><div style="font-size:11px;color:var(--text-light);">Your data stays on your device</div></div></div>
                     <div style="font-size:18px;color:var(--text-light);">›</div>
                 </div>
-                <div onclick="clearAllData()" style="background:white;border:1px solid rgba(220,20,60,0.2);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-                    <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#ff9a9e,#fecfef);display:flex;align-items:center;justify-content:center;font-size:18px;">🗑️</div>
-                        <div><div style="font-weight:700;font-size:14px;color:var(--crimson);">Clear All Data</div><div style="font-size:11px;color:var(--text-light);margin-top:1px;">Reset app to factory state</div></div>
-                    </div>
+                <div onclick="clearAllData()" class="profile-row" style="background:white;border:1px solid rgba(220,20,60,0.2);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:12px;"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#ff9a9e,#fecfef);display:flex;align-items:center;justify-content:center;font-size:18px;">🗑️</div>
+                    <div><div style="font-weight:700;font-size:14px;color:var(--crimson);">Clear All Data</div><div style="font-size:11px;color:var(--text-light);">Reset app to factory state</div></div></div>
                     <div style="font-size:18px;color:var(--text-light);">›</div>
                 </div>
             </div>
@@ -4834,20 +5366,16 @@
             <h2 class="modal-title">🆕 What's New in v1.0</h2>
             <div style="background:var(--ivory);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;line-height:1.9;color:var(--text-dark);">
                 <div style="font-weight:800;margin-bottom:10px;color:var(--navy-deep);font-size:15px;">🎉 Initial Release</div>
-                <div>• Add, edit &amp; delete transactions</div>
-                <div>• Income &amp; expense tracking</div>
-                <div>• Multiple member wallets (main + 1)</div>
-                <div>• Budgets with progress bars</div>
-                <div>• Savings goals tracker</div>
-                <div>• Recurring transactions</div>
-                <div>• Analytics &amp; insights</div>
+                <div>• Transactions, income &amp; expense tracking</div>
+                <div>• Custom categories · Budgets · Goals</div>
+                <div>• Recurring transactions (daily/weekly/monthly)</div>
+                <div>• Analytics · AI Insights · Charts</div>
                 <div>• Export: CSV, Excel, PDF, JSON</div>
                 <div>• Import: CSV, Excel, JSON</div>
-                <div>• Backup &amp; restore</div>
-                <div>• PIN lock security</div>
-                <div>• 7 custom themes</div>
-                <div>• Auto currency (50+ countries)</div>
-                <div>• 🇮🇳 Made in India</div>
+                <div>• Backup &amp; Restore · PIN Lock</div>
+                <div>• 7 custom themes · Auto currency (50+ countries)</div>
+                <div>• Family Members wallet · Profile tab</div>
+                <div>• 🇮🇳 Made in India · Built by Simple Monk</div>
             </div>
             <button class="btn btn-save" onclick="document.getElementById('whatsNewModal').style.display='none'" style="width:100%;">Got it! 🎉</button>
         </div>
@@ -4860,7 +5388,7 @@
             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
                 <div style="background:linear-gradient(135deg,rgba(80,200,120,0.1),rgba(80,200,120,0.05));border:1px solid rgba(80,200,120,0.25);border-radius:12px;padding:16px;">
                     <div style="font-weight:700;font-size:14px;color:#1b5e20;margin-bottom:8px;">🔐 Zero Data Collection</div>
-                    <div style="font-size:13px;color:var(--text-medium);line-height:1.7;">Finance Tracker does not collect, store, or transmit any of your personal or financial data. Everything stays exclusively on your device.</div>
+                    <div style="font-size:13px;color:var(--text-medium);line-height:1.7;">Finance Tracker stores all data locally on your device only. We do not collect, transmit, or store any personal or financial data anywhere.</div>
                 </div>
                 <div style="background:var(--ivory);border-radius:12px;padding:16px;font-size:13px;color:var(--text-medium);line-height:1.9;">
                     <div style="font-weight:700;color:var(--text-dark);margin-bottom:6px;">What we DON'T do:</div>
@@ -4875,7 +5403,187 @@
         </div>
     </div>
 
-    <!-- PWA Service Worker -->
+    <!-- TRIAL EXPIRED SCREEN -->
+    <div id="trialExpiredScreen" style="display:none;">
+        <div class="trial-exp-icon">⏰</div>
+        <div class="trial-exp-title">Your Free Trial Has Ended</div>
+        <div class="trial-exp-sub">
+            Your 15-day Pro+ trial is over.<br>
+            Choose a plan to keep using all features<br>
+            or continue with the Free plan.
+        </div>
+
+        <div class="trial-plan-cards">
+            <!-- PRO+ Plan -->
+            <div class="trial-plan highlight" onclick="selectPlan('proplus')">
+                <div class="popular-tag">BEST VALUE</div>
+                <div class="trial-plan-name">💎 Pro+</div>
+                <div class="trial-plan-price">₹199 <span>/ month</span></div>
+                <div class="trial-plan-features">
+                    ✓ Everything in Pro<br>
+                    ✓ Family Members wallet<br>
+                    ✓ AI Insights & Reports<br>
+                    ✓ Export PDF + Import<br>
+                    ✓ Priority support
+                </div>
+            </div>
+
+            <!-- PRO Plan -->
+            <div class="trial-plan" onclick="selectPlan('pro')">
+                <div class="trial-plan-name">⭐ Pro</div>
+                <div class="trial-plan-price">₹99 <span>/ month</span></div>
+                <div class="trial-plan-features">
+                    ✓ Budgets & Goals<br>
+                    ✓ Recurring transactions<br>
+                    ✓ All 7 Themes<br>
+                    ✓ Backup & Restore<br>
+                    ✓ Export CSV & Excel
+                </div>
+            </div>
+        </div>
+
+        <!-- Yearly toggle -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+            <div id="billingToggle" onclick="toggleBilling()" style="width:44px;height:24px;border-radius:12px;background:#ccc;position:relative;cursor:pointer;transition:0.3s;">
+                <div id="billingToggleKnob" style="position:absolute;width:18px;height:18px;background:white;border-radius:50%;top:3px;left:3px;transition:0.3s;box-shadow:0 1px 4px rgba(0,0,0,0.2);"></div>
+            </div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.7);">
+                Yearly billing &nbsp;<span style="background:rgba(80,200,120,0.25);color:#81c784;padding:2px 8px;border-radius:10px;font-weight:700;font-size:10px;">SAVE 50%</span>
+            </div>
+        </div>
+
+        <!-- Continue Free -->
+        <div class="trial-continue-free" onclick="continueFree()">
+            Continue with Free plan →
+        </div>
+    </div>
+
+    <!-- UPGRADE MODAL (mid-session) -->
+    <div id="upgradeModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">🚀 Upgrade Your Plan</h2>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                <div onclick="selectPlan('proplus')" style="background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.06));border:2px solid rgba(212,175,55,0.4);border-radius:14px;padding:16px;cursor:pointer;position:relative;">
+                    <div style="position:absolute;top:-9px;right:14px;background:linear-gradient(135deg,#D4AF37,#F4D03F);color:#0C2340;font-size:9px;font-weight:800;padding:3px 10px;border-radius:10px;">BEST VALUE</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div><div style="font-weight:800;font-size:15px;color:var(--text-dark);">💎 Pro+</div>
+                        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">All features unlocked</div></div>
+                        <div style="text-align:right;"><div style="font-size:20px;font-weight:800;color:var(--gold-rich);">₹199</div><div style="font-size:10px;color:var(--text-light);">per month</div></div>
+                    </div>
+                </div>
+                <div onclick="selectPlan('pro')" style="background:linear-gradient(135deg,rgba(124,77,255,0.08),rgba(124,77,255,0.04));border:2px solid rgba(124,77,255,0.3);border-radius:14px;padding:16px;cursor:pointer;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div><div style="font-weight:800;font-size:15px;color:var(--text-dark);">⭐ Pro</div>
+                        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">Core power features</div></div>
+                        <div style="text-align:right;"><div style="font-size:20px;font-weight:800;color:#9c27b0;">₹99</div><div style="font-size:10px;color:var(--text-light);">per month</div></div>
+                    </div>
+                </div>
+                <div style="background:var(--ivory);border-radius:14px;padding:16px;">
+                    <div style="font-size:12px;font-weight:700;color:var(--text-medium);margin-bottom:8px;">Free plan includes:</div>
+                    <div style="font-size:12px;color:var(--text-light);line-height:1.8;">
+                        ✓ Transactions · Search · Filters<br>
+                        ✓ Analytics (basic chart)<br>
+                        ✓ Categories · PIN Lock<br>
+                        ✓ Export CSV
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-cancel" onclick="document.getElementById('upgradeModal').style.display='none'">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURE UPGRADE MODAL -->
+    <div id="featureUpgradeModal" class="modal">
+        <div class="modal-content" style="padding:0;overflow:hidden;border-radius:24px;">
+
+            <!-- Header -->
+            <div id="upgradeModalHeader" style="background:linear-gradient(135deg,#0C2340,#1a3a5c);padding:24px 24px 20px;text-align:center;">
+                <div id="upgradeModalIcon" style="font-size:48px;margin-bottom:10px;">⭐</div>
+                <div id="upgradeModalTitle" style="font-size:20px;font-weight:800;color:white;margin-bottom:4px;">Upgrade to Pro</div>
+                <div id="upgradeModalSub" style="font-size:13px;color:rgba(255,255,255,0.6);">Unlock this feature and more</div>
+            </div>
+
+            <!-- Feature being unlocked -->
+            <div id="upgradeFeatureHighlight" style="background:var(--ivory);padding:16px 20px;border-bottom:1px solid rgba(0,0,0,0.06);">
+                <div style="font-size:11px;font-weight:700;color:var(--text-medium);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">You're trying to use</div>
+                <div id="upgradeFeatureName" style="display:flex;align-items:center;gap:10px;">
+                    <div id="upgradeFeatureIcon" style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(135deg,#667eea,#764ba2);">📊</div>
+                    <div>
+                        <div id="upgradeFeatureTitle" style="font-weight:700;font-size:15px;color:var(--text-dark);">Feature</div>
+                        <div id="upgradeFeatureDesc" style="font-size:12px;color:var(--text-light);margin-top:2px;">Available on Pro</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plan features list -->
+            <div style="padding:16px 20px 8px;">
+                <div id="upgradePlanBadge" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6a1b9a,#9c27b0);padding:5px 12px;border-radius:20px;margin-bottom:14px;">
+                    <span style="font-size:12px;font-weight:800;color:white;">⭐ PRO PLAN INCLUDES</span>
+                </div>
+                <div id="upgradePlanFeatures" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+            </div>
+
+            <!-- Pricing + CTA -->
+            <div style="padding:0 20px 20px;">
+                <div id="upgradePricing" style="background:linear-gradient(135deg,rgba(106,27,154,0.08),rgba(106,27,154,0.04));border:1px solid rgba(106,27,154,0.2);border-radius:14px;padding:14px 16px;margin-bottom:12px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <div id="upgradePlanName" style="font-weight:800;font-size:15px;color:var(--text-dark);">⭐ Pro</div>
+                            <div style="font-size:11px;color:var(--text-light);margin-top:2px;">Cancel anytime</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div id="upgradePrice" style="font-size:22px;font-weight:800;color:#9c27b0;">₹99<span style="font-size:13px;font-weight:400;color:var(--text-light);">/mo</span></div>
+                            <div id="upgradeYearlyPrice" style="font-size:10px;color:var(--text-light);">₹599/year (save 50%)</div>
+                        </div>
+                    </div>
+                </div>
+                <button id="upgradeCtaBtn" onclick="selectPlan(currentUpgradePlan)" style="width:100%;padding:15px;border:none;border-radius:14px;font-weight:800;font-size:16px;cursor:pointer;background:linear-gradient(135deg,#6a1b9a,#9c27b0);color:white;margin-bottom:10px;">
+                    Upgrade to Pro 🚀
+                </button>
+                <button onclick="document.getElementById('featureUpgradeModal').style.display='none'" style="width:100%;padding:12px;border:none;background:transparent;color:var(--text-light);font-size:13px;cursor:pointer;">
+                    Maybe Later
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMING SOON MODAL -->
+    <div id="comingSoonModal" class="modal">
+        <div class="modal-content" style="text-align:center;">
+            <div style="font-size:56px;margin-bottom:16px;">🚀</div>
+            <h2 class="modal-title" style="text-align:center;">Subscriptions Coming Soon!</h2>
+            <div style="background:linear-gradient(135deg,rgba(212,175,55,0.1),rgba(212,175,55,0.05));border:1px solid rgba(212,175,55,0.25);border-radius:14px;padding:20px;margin-bottom:20px;">
+                <div style="font-size:14px;color:var(--text-dark);line-height:1.8;font-weight:500;">
+                    We are working on bringing<br>
+                    <strong>Pro & Pro+ subscriptions</strong><br>
+                    through Google Play Store.<br><br>
+                    <span style="color:var(--text-light);font-size:13px;">
+                        Meanwhile enjoy your<br>
+                        <strong style="color:var(--gold-rich);">15-day free Pro+ trial!</strong>
+                    </span>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                <div style="background:var(--ivory);border-radius:12px;padding:14px;text-align:left;">
+                    <div style="font-size:11px;font-weight:700;color:var(--text-medium);margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;">Coming pricing</div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:14px;font-weight:700;color:var(--text-dark);">⭐ Pro</span>
+                        <span style="font-size:13px;color:var(--text-medium);">₹99/mo &nbsp;·&nbsp; ₹999/yr</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:14px;font-weight:700;color:var(--gold-rich);">💎 Pro+</span>
+                        <span style="font-size:13px;color:var(--text-medium);">₹199/mo &nbsp;·&nbsp; ₹1999/yr</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="document.getElementById('comingSoonModal').style.display='none'" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--gold-rich),#E6BE5F);color:var(--navy-deep);border:none;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;">
+                Got it! Continue Trial 🎉
+            </button>
+        </div>
+    </div>
+
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
