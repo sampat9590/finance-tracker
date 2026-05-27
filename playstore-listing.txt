@@ -1,0 +1,126 @@
+═══════════════════════════════════════
+FINANCE TRACKER — PLAY STORE LISTING
+═══════════════════════════════════════
+
+APP TITLE (30 chars max before dash)
+──────────────────────────────────────
+Finance Tracker — Expense Manager
+
+
+SHORT DESCRIPTION (80 chars)
+──────────────────────────────────────
+Track expenses, budgets & goals. 100% offline. No login. Made in India 🇮🇳
+
+
+LONG DESCRIPTION
+──────────────────────────────────────
+Finance Tracker is a simple, private and powerful expense manager built for Indians who want full control of their money — without giving up their data.
+
+No login. No cloud. No internet needed. Everything stays on your phone.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+💰 TRACK EVERY RUPEE
+━━━━━━━━━━━━━━━━━━━━━━━
+Add income and expenses in seconds. Choose a category, enter the amount, pick a date — done. Your balance updates instantly. Filter by Today, This Month or All Time to see exactly where your money is going.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+📊 BUDGETS THAT WORK
+━━━━━━━━━━━━━━━━━━━━━━━
+Set monthly spending limits for Food, Shopping, Travel or any category. The progress bar fills as you spend. Orange when you are near the limit. Red when you have gone over. Stay on track every month.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🎯 SAVINGS GOALS
+━━━━━━━━━━━━━━━━━━━━━━━
+Planning a vacation? Saving for a gadget? Set a target amount and deadline. Add money toward it whenever you can. Finance Tracker tracks your progress automatically and tells you when you will reach your goal.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🔄 RECURRING TRANSACTIONS
+━━━━━━━━━━━━━━━━━━━━━━━
+Add your salary, rent, EMI and subscriptions once. Finance Tracker automatically adds them on the correct date every time you open the app. No more forgetting your fixed monthly entries.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+💡 SMART INSIGHTS
+━━━━━━━━━━━━━━━━━━━━━━━
+See your savings rate, top spending category, daily average spend and how this month compares to last month. Finance Tracker analyses your actual data and gives you insights that help you spend smarter.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+👥 FAMILY MEMBERS
+━━━━━━━━━━━━━━━━━━━━━━━
+Track finances for your whole family. Each member has completely separate transactions, budgets and goals. Switch between members in one tap from the home screen.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+📤 EXPORT YOUR DATA
+━━━━━━━━━━━━━━━━━━━━━━━
+Export your transactions as Excel, PDF, CSV or JSON. Share with your accountant, save for your records or import into any other app. Your data always belongs to you.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🔒 PRIVATE & SECURE
+━━━━━━━━━━━━━━━━━━━━━━━
+Finance Tracker never connects to any server. All your data is stored only on your device. Set a 4-digit PIN or use fingerprint to lock the app. We collect zero data about you — read our privacy policy anytime inside the app.
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🌟 WHAT YOU GET FREE
+━━━━━━━━━━━━━━━━━━━━━━━
+✓ Unlimited transactions
+✓ Income and expense tracking
+✓ Category management
+✓ Balance overview
+✓ Date filters
+✓ PIN lock
+✓ CSV export
+✓ 14-day Pro+ trial — all features unlocked
+
+━━━━━━━━━━━━━━━━━━━━━━━
+⭐ PRO FEATURES
+━━━━━━━━━━━━━━━━━━━━━━━
+✓ Budget manager
+✓ Savings goals
+✓ Recurring transactions
+✓ Investment tracker
+✓ Backup and restore
+✓ 7 colour themes
+✓ Custom categories
+✓ Excel and PDF export
+
+━━━━━━━━━━━━━━━━━━━━━━━
+💎 PRO+ FEATURES
+━━━━━━━━━━━━━━━━━━━━━━━
+✓ Everything in Pro
+✓ Family members (multi-wallet)
+✓ AI-powered spending insights
+✓ Monthly reports
+✓ Import from spreadsheet
+
+━━━━━━━━━━━━━━━━━━━━━━━
+🇮🇳 MADE IN INDIA
+━━━━━━━━━━━━━━━━━━━━━━━
+Finance Tracker is built by Simple Monk — a Tracking Monk product from the House Of Monks. Built with love in India for Indians who want a simple, private and powerful way to manage their money.
+
+Keywords: expense tracker, money manager, budget tracker, daily expense manager, personal finance app, income expense tracker, monthly budget planner, pocket money manager, kharch tracker, paisa manager, offline expense manager, simple budget tracker, manual expense entry, daily expense tracker without internet
+
+
+SCREENSHOT CAPTIONS
+──────────────────────────────────────
+Screenshot 1 (Dashboard):     "Track every rupee — know where your money goes"
+Screenshot 2 (Add Transaction):"Add income or expense in seconds"
+Screenshot 3 (Budgets):        "Set budgets. Stay on track. Every month."
+Screenshot 4 (Analytics):      "See exactly where your money is going"
+Screenshot 5 (Goals):          "Save toward anything — step by step"
+Screenshot 6 (Insights):       "Smart insights from your actual spending"
+Screenshot 7 (Profile/PIN):    "No login. No cloud. 100% private."
+Screenshot 8 (Themes):         "Make it yours — 7 beautiful themes"
+
+
+PRIVACY POLICY URL
+──────────────────────────────────────
+https://sampat9590.github.io/finance-tracker/privacy-policy.html
+
+
+CATEGORY
+──────────────────────────────────────
+Finance
+
+
+TAGS
+──────────────────────────────────────
+expense tracker, budget, money manager, finance, personal finance, India
