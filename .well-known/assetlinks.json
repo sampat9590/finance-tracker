@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.trackingmonk.financetracker",
+        "sha256_cert_fingerprints": ["06:F1:57:BA:F5:E2:52:A7:A1:BD:88:39:2F:20:5F:B9:56:A5:9A:B0:38:88:B2:06:5F:BB:D6:01:7D:12:47:BF"]
+      }
+    }]
